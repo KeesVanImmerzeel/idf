@@ -12,4 +12,15 @@
 #'
 #' @docType package
 #' @name idf
+#'
+#' @importFrom fnamer get_filename_extension
+#' @importFrom fnamer bare_filename
+#' @importFrom sp CRS
+#' @importFrom raster raster
+#' @importFrom raster crs
+#' @importFrom raster writeRaster
+#' @importFrom raster writeFormats
+#' @importFrom raster NAvalue
+#' @importFrom R.utils doCall
+#'
 NULL

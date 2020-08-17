@@ -3,7 +3,6 @@
 \docType{package}
 \name{idf}
 \alias{idf}
-\alias{idf-package}
 \title{idf: Extending the 'raster' package in order to be able to read and write idf rasters.}
 \description{
 IDF is a simple binary format used by the iMOD groundwater modelling software.

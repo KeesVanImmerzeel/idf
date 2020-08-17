@@ -2,3 +2,12 @@
 
 export(read_raster)
 export(write_raster)
+importFrom(R.utils,doCall)
+importFrom(fnamer,bare_filename)
+importFrom(fnamer,get_filename_extension)
+importFrom(raster,NAvalue)
+importFrom(raster,crs)
+importFrom(raster,raster)
+importFrom(raster,writeFormats)
+importFrom(raster,writeRaster)
+importFrom(sp,CRS)

@@ -13,15 +13,15 @@ read_raster(x, crs = NULL, ...)
 If an idf-file is specified and this argument is missing,
 the sp::CRS("+init=epsg:28992") is used.
 For other raster filetypes: the CRS specified is used;
-   if it is not specified, the CRS is read from file (if existant).}
+if it is not specified, the CRS is read from file (if existant).}
 
 \item{...}{Additional arguments as for 'raster' function.
 For an idf-raster, only the optional 'crs' argument is used.}
 }
 \value{
 RasterLayer
-   N.B.: For your own files, omit the 'system.file' and 'package="raster"' bits
-   these are just to get the path to files installed with the package.
+N.B.: For your own files, omit the 'system.file' and 'package="raster"' bits
+these are just to get the path to files installed with the package.
 }
 \description{
 The function 'read_raster' is able to create a RasterLayer object from an
