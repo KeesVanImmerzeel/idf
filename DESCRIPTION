@@ -22,6 +22,7 @@ Imports:
     R.utils (>= 2.9.0),
     sp (>= 1.3.1),
     rgdal
+Remotes: KeesVanImmerzeel/fnamer
 Suggests: 
     testthat
 RoxygenNote: 7.1.0
