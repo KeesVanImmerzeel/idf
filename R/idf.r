@@ -13,8 +13,8 @@
 #' @docType package
 #' @name idf
 #'
-#' importFrom fnamer get_filename_extension
-#' importFrom fnamer bare_filename
+#' @importFrom fnamer get_filename_extension
+#' @importFrom fnamer bare_filename
 #' @importFrom sp CRS
 #' @importFrom raster raster
 #' @importFrom raster crs
@@ -23,5 +23,4 @@
 #' @importFrom raster NAvalue
 #' @importFrom R.utils doCall
 #'
-install_github("KeesVanImmerzeel/fnamer")
 NULL
