@@ -1,0 +1,25 @@
+Package: idf
+Title: Extending the 'raster' package with reading and writing idf rasters
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Kees",
+           family = "van Immerzeel",
+           role = c("aut", "cre"),
+           email = "idodoes@xs4all.nl")
+Description: Extending the 'raster' package in order to be able to read and write idf rasters.
+    IDF is a simple binary format used by the iMOD groundwater modelling software.
+    The format contains a header with grid and spatial extent information and
+    an array of floats.The array of floats is translated to a rectangular grid using
+    the ncol and nrow fields of the header.
+URL: https://oss.deltares.nl 
+License: CC0
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    fnamer (>= 0.0.0.9000),
+    raster (>= 3.0.7),
+    R.utils (>= 2.9.0),
+    sp (>= 1.3.1)
+Suggests: 
+    testthat
+RoxygenNote: 6.1.1
