@@ -1,3 +1,4 @@
 ^idf\.Rproj$
 ^\.Rproj\.user$
 ^.*\.Rproj$
+^appveyor\.yml$
