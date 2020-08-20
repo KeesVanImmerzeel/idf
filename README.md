@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/KeesVanImmerzeel/idf?branch=master&svg=true)](https://ci.appveyor.com/project/KeesVanImmerzeel/idf)
+[![Travis build status](https://travis-ci.com/KeesVanImmerzeel/idf.svg?branch=master)](https://travis-ci.com/KeesVanImmerzeel/idf)
 <!-- badges: end -->
 
 Extending the 'raster' package in order to be able to read and write idf rasters.
