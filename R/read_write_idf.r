@@ -137,8 +137,8 @@ write_raster <- function(x, filename, format, ...) {
    if ((missing(format)) &
        (.is_idf_extension(fnamer::get_filename_extension(filename))) &
        class(x) == "RasterLayer") {
-      tryCatch( R.utils::doCall(".write.idf", x=x, filename=filename, ...) )  # Executes a function call with option to ignore unused arguments.
-
+      #tryCatch( R.utils::doCall(".write.idf", x=x, filename=filename, ...) )  # Executes a function call with option to ignore unused arguments.
+      .write.idf(x, filename, ...)
    } else {
       if (!missing(format)) {
          suppressWarnings(raster::writeRaster(x, filename, prj=TRUE, ...))
