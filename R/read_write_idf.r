@@ -75,6 +75,65 @@ read_raster <- function(x, crs=NULL, ...) {
 #'
 #' @export
 write_raster <- function(x, filename, format, ...) {
+   # Write raster layer to idf file.
+   #
+
+   # @param x RasterLayer Raster* object
+   # @param filename Output (idf) filename
+   # @param overwrite (boolean) if true overwrite possible existing idf file.
+   # @examples
+   #
+   # f <- system.file("extdata", "test.tif", package="idf")
+   # f
+   # r <- idf::read_raster(f)
+   #
+   # .write.idf(r, "test.idf", overwrite = TRUE)
+   #
+
+   .write.idf <- function(x, filename, overwrite = FALSE) {
+      if ((overwrite == TRUE) |
+          (overwrite == FALSE & (!file.exists(filename)))) {
+         con = file(filename, "wb")
+         ncols <- x@ncols
+         nrows <- x@nrows
+         xll <- x@extent[1]
+         xur <- x@extent[2]
+         xlr <- x@extent[3]
+         yur <- x@extent[4]
+         writeBin(as.integer(c(0, ncols, nrows)),
+                  con,
+                  size = 4,
+                  endian = "little")
+         writeBin(
+            c(
+               xll,
+               xur,
+               xlr,
+               yur,
+               x@data@min,
+               x@data@max,
+               x@file@nodatavalue
+            ),
+            con,
+            size = 4,
+            endian = "little"
+         )
+         writeBin(as.integer(0),
+                  con,
+                  size = 4,
+                  endian = "little")
+         dx <- (xur - xll) / ncols
+         dy <- (yur - xlr) / nrows
+         writeBin(c(dx, dy), con, size = 4, endian = "little")
+         #writeBin( x@data@values, con, size = 4, endian = "little")
+         writeBin(x[], con, size = 4, endian = "little")
+         close(con)
+      } else {
+         stop("Error in .write.idf: file exists; use overwrite=TRUE")
+      }
+   }
+
+
    if ((missing(format)) &
        (.is_idf_extension(fnamer::get_filename_extension(filename))) &
        class(x) == "RasterLayer") {
@@ -196,62 +255,5 @@ write_raster <- function(x, filename, format, ...) {
 }
 
 # ----------------------------------------------------------------------------
-# Write raster layer to idf file.
-#
-
-# @param x RasterLayer Raster* object
-# @param filename Output (idf) filename
-# @param overwrite (boolean) if true overwrite possible existing idf file.
-# @examples
-#
-# f <- system.file("extdata", "test.tif", package="idf")
-# f
-# r <- idf::read_raster(f)
-#
-# .write.idf(r, "test.idf", overwrite = TRUE)
-#
-
-.write.idf <- function(x, filename, overwrite = FALSE) {
-   if ((overwrite == TRUE) |
-       (overwrite == FALSE & (!file.exists(filename)))) {
-      con = file(filename, "wb")
-      ncols <- x@ncols
-      nrows <- x@nrows
-      xll <- x@extent[1]
-      xur <- x@extent[2]
-      xlr <- x@extent[3]
-      yur <- x@extent[4]
-      writeBin(as.integer(c(0, ncols, nrows)),
-               con,
-               size = 4,
-               endian = "little")
-      writeBin(
-         c(
-            xll,
-            xur,
-            xlr,
-            yur,
-            x@data@min,
-            x@data@max,
-            x@file@nodatavalue
-         ),
-         con,
-         size = 4,
-         endian = "little"
-      )
-      writeBin(as.integer(0),
-               con,
-               size = 4,
-               endian = "little")
-      dx <- (xur - xll) / ncols
-      dy <- (yur - xlr) / nrows
-      writeBin(c(dx, dy), con, size = 4, endian = "little")
-      #writeBin( x@data@values, con, size = 4, endian = "little")
-      writeBin(x[], con, size = 4, endian = "little")
-      close(con)
-   } else {
-      stop("Error in .write.idf: file exists; use overwrite=TRUE")
-   }
-}
 
 
