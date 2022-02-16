@@ -100,7 +100,7 @@ write_raster <- function(x, filename, format, ...) {
          xur <- x@extent[2]
          xlr <- x@extent[3]
          yur <- x@extent[4]
-         writeBin(as.integer(c(0, ncols, nrows)),
+         writeBin(as.integer(c(1271, ncols, nrows)),
                   con,
                   size = 4,
                   endian = "little")
@@ -125,7 +125,6 @@ write_raster <- function(x, filename, format, ...) {
          dx <- (xur - xll) / ncols
          dy <- (yur - xlr) / nrows
          writeBin(c(dx, dy), con, size = 4, endian = "little")
-         #writeBin( x@data@values, con, size = 4, endian = "little")
          writeBin(x[], con, size = 4, endian = "little")
          close(con)
       } else {
@@ -137,7 +136,6 @@ write_raster <- function(x, filename, format, ...) {
    if ((missing(format)) &
        (.is_idf_extension(fnamer::get_filename_extension(filename))) &
        class(x) == "RasterLayer") {
-      #tryCatch( R.utils::doCall(".write.idf", x=x, filename=filename, ...) )  # Executes a function call with option to ignore unused arguments.
       .write.idf(x, filename, ...)
    } else {
       if (!missing(format)) {
@@ -194,6 +192,7 @@ write_raster <- function(x, filename, format, ...) {
                      n = 3,
                      size = 4,
                      endian = "little")
+      lrl_id = vars[1] # Lahey Record Length Identification; 1271 is a single precision IDF, 2296 a double precision.
       ncol = vars[2]
       nrow = vars[3]
       vars = readBin(con,
