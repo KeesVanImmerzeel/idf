@@ -17,12 +17,12 @@ License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    fnamer (>= 0.0.0.9000),
+    fileutils (>= 0.0.0.9000),
     raster (>= 3.0.7),
     R.utils (>= 2.9.0),
     sp (>= 1.3.1),
     rgdal
-Remotes: KeesVanImmerzeel/fnamer
+Remotes: KeesVanImmerzeel/fileutils
 Suggests: 
     testthat
 RoxygenNote: 7.1.2

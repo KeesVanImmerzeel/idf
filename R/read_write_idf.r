@@ -34,7 +34,7 @@
 #' @export
 read_raster <- function(x, crs=NULL, ...) {
    if ((typeof(x) == "character") &
-       (.is_idf_extension(fnamer::get_filename_extension(x)))) {
+       (.is_idf_extension(fileutils::get_filename_extension(x)))) {
       if (missing(crs)) {
          crs <- sp::CRS("+init=epsg:28992")
       }
@@ -134,7 +134,7 @@ write_raster <- function(x, filename, format, ...) {
 
 
    if ((missing(format)) &
-       (.is_idf_extension(fnamer::get_filename_extension(filename))) &
+       (.is_idf_extension(fileutils::get_filename_extension(filename))) &
        class(x) == "RasterLayer") {
       .write.idf(x, filename, ...)
    } else {
@@ -248,7 +248,7 @@ write_raster <- function(x, filename, format, ...) {
       raster::NAvalue(layer) <- nodata
       layer[] <- data
 
-      names(layer) <- fnamer::bare_filename(x)
+      names(layer) <- fileutils::bare_filename(x)
 
       return(layer)
 }

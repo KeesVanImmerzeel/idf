@@ -13,8 +13,8 @@
 #' @docType package
 #' @name idf
 #'
-#' @importFrom fnamer get_filename_extension
-#' @importFrom fnamer bare_filename
+#' @importFrom fileutils get_filename_extension
+#' @importFrom fileutils bare_filename
 #' @importFrom sp CRS
 #' @importFrom raster raster
 #' @importFrom raster crs
