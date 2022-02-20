@@ -1,5 +1,6 @@
-# In development: to install package to the default library path (.libPaths()): devtools::install()
-# To create a binary package file: devtools::build(binary=TRUE). This creates a single zip-file.
+# To do 2022-2-20:
+# 1. add reading/writing double precision idf
+# 2. move to terra package (instead of raster)
 
 # ----------------------------------------------------------------------------
 #' Methods to create a RasterLayer object with the ability to read idf files.
