@@ -105,6 +105,7 @@ write_raster <- function(x, filename, format, ...) {
                   con,
                   size = 4,
                   endian = "little")
+
          writeBin(
             c(
                xll,
