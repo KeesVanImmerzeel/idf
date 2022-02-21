@@ -4,7 +4,7 @@
 \alias{write_raster}
 \title{Write raster data to a file.}
 \usage{
-write_raster(x, filename, format, ...)
+write_raster(x, filename, format = NULL, e = NULL, constant = NULL, ...)
 }
 \arguments{
 \item{x}{RasterLayer Raster* object}
@@ -16,6 +16,10 @@ write_raster(x, filename, format, ...)
 attempted to infer it from the filename extension. If that fails, the
 default format is used. The default format is 'raster', but this can be
 changed using \code{\link[raster]{rasterOptions}}.}
+
+\item{e}{Extent object}
+
+\item{constant}{multiplication factor (numeric)}
 
 \item{...}{Additional arguments as in \code{\link[raster]{writeRaster}}.}
 }

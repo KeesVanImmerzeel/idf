@@ -71,11 +71,13 @@ read_raster <- function(x, crs=NULL, ...) {
 #'   attempted to infer it from the filename extension. If that fails, the
 #'   default format is used. The default format is 'raster', but this can be
 #'   changed using \code{\link[raster]{rasterOptions}}.
+#' @param e Extent object
+#' @param constant multiplication factor (numeric)
 #' @param ... Additional arguments as in \code{\link[raster]{writeRaster}}.
 #' @return This function is used for the side-effect of writing values to a file.
-#'
+#' @importFrom magrittr %<>%
 #' @export
-write_raster <- function(x, filename, format, ...) {
+write_raster <- function(x, filename, format=NULL, e=NULL, constant=NULL, ...) {
    # Write raster layer to idf file.
    #
 
@@ -134,13 +136,18 @@ write_raster <- function(x, filename, format, ...) {
       }
    }
 
-
-   if ((missing(format)) &
+   if (!is.null(e)) {
+      x %<>% raster::crop(e)
+   }
+   if (!is.null(constant) & constant != 1) {
+      x[] <- x[] * constant
+   }
+   if ((is.null(format)) &
        (.is_idf_extension(fileutils::get_filename_extension(filename))) &
        class(x) == "RasterLayer") {
       .write.idf(x, filename, ...)
    } else {
-      if (!missing(format)) {
+      if (!is.null(format)) {
          suppressWarnings(raster::writeRaster(x, filename, prj=TRUE, ...))
       } else {
          suppressWarnings(raster::writeRaster(x, filename, format, prj=TRUE, ...))
