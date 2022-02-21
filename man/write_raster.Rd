@@ -4,39 +4,35 @@
 \alias{write_raster}
 \title{Write raster data to a file.}
 \usage{
-write_raster(x, filename, format = NULL, e = NULL, constant = NULL, ...)
+write_raster(x, filename, filetype = NULL, e = NULL, constant = NULL, ...)
 }
 \arguments{
-\item{x}{RasterLayer Raster* object}
+\item{x}{terra::SpatRaster object}
 
 \item{filename}{Output filename}
 
-\item{format}{Character. Output file type. See
-\code{\link[raster]{writeFormats}}. If this argument is not provided, it is
-attempted to infer it from the filename extension. If that fails, the
-default format is used. The default format is 'raster', but this can be
-changed using \code{\link[raster]{rasterOptions}}.}
+\item{filetype}{Character. File format expresses as GDAL driver names.
+If this argument is not provided, it is attempted to infer it from the filename extension.}
 
 \item{e}{Extent object}
 
 \item{constant}{multiplication factor (numeric)}
 
-\item{...}{Additional arguments as in \code{\link[raster]{writeRaster}}.}
+\item{...}{Additional arguments as in 'terra::writeRaster'.}
 }
 \value{
 This function is used for the side-effect of writing values to a file.
 }
 \description{
-\code{write_raster} writes an entire Raster* object to a file, using one of
-the many supported formats or the \code{\link[raster]{raster-package}} or the
-idf file format as used in the imod modeling software
+\code{write_raster} writes an entire terra::SpatRaster object to a file, using one of
+the many supported formats in the 'terra' package or an idf file format as used in the imod modeling software
 (\url{https://oss.deltares.nl/web/imod}).
 }
 \details{
 To use the 'idf' output format, don't specify the 'format argument' but use
-the'.idf' extension in the filename. Only RasterLayer objects can be written
-to an idf-file (no RasterStack or RasterBrick). Of the additional arguments
-of \code{\link[raster]{writeRaster}}, only the 'overwrite' may be used in
+the'.idf' extension in the filename. Only terra::SpatRaster objects with depth=0 can be written
+to an idf-file. Of the additional arguments
+of \code{\link[terra]{writeRaster}}, only the 'overwrite' may be used in
 case the idf-format is specified. In that case, all other additional
 arguments of the function \code{write_raster} are ignored.
 }

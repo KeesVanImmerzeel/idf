@@ -2,28 +2,29 @@
 % Please edit documentation in R/read_write_idf.r
 \name{read_raster}
 \alias{read_raster}
-\title{Methods to create a RasterLayer object with the ability to read idf files.}
+\title{Methods to create a terra::SpatRaster object with the ability to read idf files.
+The function 'read_raster' is able to create a RasterLayer object from an
+idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
+Otherwhise the function equals the function 'raster::raster()'.
+In order to use the raster being read in your script, load the raster library first
+i.e. library(raster)}
 \usage{
-read_raster(x, crs = NULL, ...)
+read_raster(x, EPSG = NULL, ...)
 }
 \arguments{
 \item{x}{(character) filename}
 
-\item{crs}{(CRS) Coordinate Reference System. Optional.
-If an idf-file is specified and this argument is missing,
-the sp::CRS("+init=epsg:28992") is used.
-For other raster filetypes: the CRS specified is used;
-if it is not specified, the CRS is read from file (if existant).}
+\item{EPSG}{Four-five digit number which represents a particular CRS definition.
+If an idf-file is specified and this argument is missing, EPSG=28992 is used.}
 
-\item{...}{Additional arguments as for 'raster' function.
-For an idf-raster, only the optional 'crs' argument is used.}
+\item{...}{Additional arguments as for 'terra::rast' function.
+For an idf-raster, only the optional 'EPSG' argument is used.}
 }
 \value{
-RasterLayer
-N.B.: For your own files, omit the 'system.file' and 'package="raster"' bits
-these are just to get the path to files installed with the package.
+terra::SpatRaster
 }
 \description{
+Methods to create a terra::SpatRaster object with the ability to read idf files.
 The function 'read_raster' is able to create a RasterLayer object from an
 idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
 Otherwhise the function equals the function 'raster::raster()'.
