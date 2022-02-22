@@ -33,6 +33,35 @@ read_raster <- function(x, EPSG="EPSG:28992", ...) {
 }
 
 # ----------------------------------------------------------------------------
+#
+#  Get size of floats (single or double precision IDF)
+# @param Lahey Record Length Identification; 1271 is a single precision IDF,
+#              2296 a double precision (integer)
+# @return size of floats (integer)
+.get_size <- function (lahey) {
+      if (lahey == 2296) {
+            return(8)
+      } else {
+            return(4)
+      }
+}
+
+# ----------------------------------------------------------------------------
+
+# Test if the Specified Filename Extension is idf-Filename Extension
+#
+# Returns TRUE or FALSE depending on the input filename extension.
+#
+# @param ext Filename extension (character)
+# @return TRUE if 'ext' is a valid idf-filename extension; FALSE otherwhise (logical)
+# @examples
+# .is_idf_extension(".idf")
+# .is_idf_extension(".txt")
+.is_idf_extension <- function( ext ) {
+      toupper(ext) == ".IDF"
+}
+
+# ----------------------------------------------------------------------------
 
 #' Write raster data to a file.
 #'
@@ -117,20 +146,9 @@ write_raster <- function(x,
       }
 }
 
-# ----------------------------------------------------------------------------
 
-# Test if the Specified Filename Extension is idf-Filename Extension
-#
-# Returns TRUE or FALSE depending on the input filename extension.
-#
-# @param ext Filename extension (character)
-# @return TRUE if 'ext' is a valid idf-filename extension; FALSE otherwhise (logical)
-# @examples
-# .is_idf_extension(".idf")
-# .is_idf_extension(".txt")
-.is_idf_extension <- function( ext ) {
-   toupper(ext) == ".IDF"
-}
+
+
 
 # ----------------------------------------------------------------------------
 # Read raster layer from idf file.
@@ -140,16 +158,18 @@ write_raster <- function(x,
 .read.idf <- function(x) {
    con = file(x, "rb")
    vars = readBin(con,
-                  integer(),
+                  integer(), #
                   n = 3,
                   size = 4,
                   endian = "little")
+   size <- .get_size( lahey = vars[1] )
+
    ncol = vars[2]
    nrow = vars[3]
    vars = readBin(con,
                   double(),
                   n = 7,
-                  size = 4,
+                  size = size,
                   endian = "little")
    xll = vars[1]
    xur = vars[2]
@@ -171,14 +191,14 @@ write_raster <- function(x,
    vars = readBin(con,
                   double(),
                   n = 2,
-                  size = 4,
+                  size = size,
                   endian = "little")
    dx = vars[1]
    dy = vars[2]
    data = readBin(con,
                   double(),
                   n = ncol * nrow,
-                  size = 4,
+                  size = size,
                   endian = "little")
    data = matrix(data,
                  nrow = nrow,
