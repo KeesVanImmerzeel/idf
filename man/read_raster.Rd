@@ -2,37 +2,26 @@
 % Please edit documentation in R/read_write_idf.r
 \name{read_raster}
 \alias{read_raster}
-\title{Methods to create a terra::SpatRaster object with the ability to read idf files.
-The function 'read_raster' is able to create a RasterLayer object from an
-idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
-Otherwhise the function equals the function 'raster::raster()'.
-In order to use the raster being read in your script, load the raster library first
-i.e. library(raster)}
+\title{Methods to create a terra::SpatRaster object with the ability to read idf files.}
 \usage{
-read_raster(x, EPSG = NULL, ...)
+read_raster(x, EPSG = "EPSG:28992", ...)
 }
 \arguments{
-\item{x}{(character) filename}
+\item{x}{filename (character)}
 
-\item{EPSG}{Four-five digit number which represents a particular CRS definition.
-If an idf-file is specified and this argument is missing, EPSG=28992 is used.}
+\item{EPSG}{coordinate reference system like "EPSG:4326" (character)}
 
-\item{...}{Additional arguments as for 'terra::rast' function.
-For an idf-raster, only the optional 'EPSG' argument is used.}
+\item{...}{Additional arguments as for 'terra::rast' function. For an idf-raster, only the optional 'EPSG' argument is used.}
 }
 \value{
 terra::SpatRaster
 }
 \description{
-Methods to create a terra::SpatRaster object with the ability to read idf files.
 The function 'read_raster' is able to create a RasterLayer object from an
 idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
 Otherwhise the function equals the function 'raster::raster()'.
-In order to use the raster being read in your script, load the raster library first
-i.e. library(raster)
 }
 \examples{
-
 f <- system.file("extdata", "test.idf", package="idf")
 f
 r <- read_raster(f)
@@ -40,5 +29,4 @@ r <- read_raster(f)
 f <- system.file("extdata", "test.tif", package="idf")
 f
 r <- read_raster(f)
-
 }

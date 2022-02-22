@@ -4,17 +4,14 @@
 \alias{write_raster}
 \title{Write raster data to a file.}
 \usage{
-write_raster(x, filename, filetype = NULL, e = NULL, constant = NULL, ...)
+write_raster(x, filename, e = NULL, constant = NULL, ...)
 }
 \arguments{
 \item{x}{terra::SpatRaster object}
 
-\item{filename}{Output filename}
+\item{filename}{Output filename (character)}
 
-\item{filetype}{Character. File format expresses as GDAL driver names.
-If this argument is not provided, it is attempted to infer it from the filename extension.}
-
-\item{e}{Extent object}
+\item{e}{Terra extent object}
 
 \item{constant}{multiplication factor (numeric)}
 
@@ -24,15 +21,8 @@ If this argument is not provided, it is attempted to infer it from the filename 
 This function is used for the side-effect of writing values to a file.
 }
 \description{
-\code{write_raster} writes an entire terra::SpatRaster object to a file, using one of
-the many supported formats in the 'terra' package or an idf file format as used in the imod modeling software
-(\url{https://oss.deltares.nl/web/imod}).
-}
-\details{
-To use the 'idf' output format, don't specify the 'format argument' but use
-the'.idf' extension in the filename. Only terra::SpatRaster objects with depth=0 can be written
-to an idf-file. Of the additional arguments
-of \code{\link[terra]{writeRaster}}, only the 'overwrite' may be used in
-case the idf-format is specified. In that case, all other additional
-arguments of the function \code{write_raster} are ignored.
+Writes a terra::SpatRaster object to a file, using one of
+the supported formats in the 'terra' package
+or an idf file format (ref. \url{https://oss.deltares.nl/web/imod}).
+In that case, use the'.idf' extension in the filename.
 }
