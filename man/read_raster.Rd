@@ -19,7 +19,7 @@ terra::SpatRaster
 \description{
 The function 'read_raster' is able to create a RasterLayer object from an
 idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
-Otherwhise the function equals the function 'raster::raster()'.
+Otherwhise the function equals the function 'terra::rast()'.
 }
 \examples{
 f <- system.file("extdata", "test.idf", package="idf")

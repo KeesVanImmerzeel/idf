@@ -3,7 +3,7 @@
 \docType{package}
 \name{idf}
 \alias{idf}
-\title{idf: Extending the 'raster' package in order to be able to read and write idf rasters.}
+\title{idf: Extending the 'terra' package in order to be able to read and write idf rasters.}
 \description{
 IDF is a simple binary format used by the iMOD groundwater modelling software.
 The format contains a header with grid and spatial extent information and
@@ -12,7 +12,7 @@ the ncol and nrow fields of the header.
 }
 \section{idf functions}{
 
-This package extends the 'raster' package with two functions:
+This package extends the 'terra' package with two functions:
 
 \code{\link{read_raster}}
 
