@@ -31,4 +31,10 @@ Then load the package with:
 
 To get help on the functions in this package type a question mark before the function name, like `?read_raster()`
 
+## idf-format definition
+
+![image](https://user-images.githubusercontent.com/16401251/155693136-579077c6-fd0c-4d18-8bf7-c68057f3692a.png)
+![image](https://user-images.githubusercontent.com/16401251/155693361-57942b0b-b0ed-4b2b-93a2-311ceb3874d1.png)
+
+
 
