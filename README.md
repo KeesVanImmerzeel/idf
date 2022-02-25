@@ -5,7 +5,7 @@
 [![Travis build status](https://travis-ci.com/KeesVanImmerzeel/idf.svg?branch=master)](https://travis-ci.com/KeesVanImmerzeel/idf)
 <!-- badges: end -->
 
-Extending the 'raster' package in order to be able to read and write idf rasters.
+Extending the 'terra' package in order to be able to read and write idf rasters.
 
 IDF is a simple binary format used by the iMOD groundwater modelling software.
 The format contains a header with grid and spatial extent information and
@@ -14,7 +14,7 @@ the ncol and nrow fields of the header.
 
 ## Installation
 
-You can install the released version of menyanthes from with:
+You can install the released version of the idf-package with:
 
 `install_github("KeesVanImmerzeel/idf")`
 
@@ -23,8 +23,8 @@ Then load the package with:
 `library("idf")` 
 
 ## Functions in this package
-- `read_raster()`: create a RasterLayer object from an idf-file.
-- `write_raster()`: writes an Raster object to a file, using one of the many supported formats or the R-raster-package 
+- `read_raster()`: create a terra::SpatRaster object (single layer) from an idf-file.
+- `write_raster()`: writes an terra::SpatRaster object (single layer) to a file, using one of the many supported formats or the terra package 
   or the idf file format as used in the imod modeling software.
 
 ## Get help

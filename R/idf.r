@@ -7,7 +7,9 @@
 #'
 #' @section idf functions:
 #' This package extends the 'raster' package with two functions:
+#'
 #' \code{\link{read_raster}}
+#'
 #' \code{\link{write_raster}}
 #'
 #' @docType package
