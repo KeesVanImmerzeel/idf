@@ -1,8 +1,6 @@
 # idf
-
 <!-- badges: start -->
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/KeesVanImmerzeel/idf?branch=master&svg=true)](https://ci.appveyor.com/project/KeesVanImmerzeel/idf)
-[![Travis build status](https://travis-ci.com/KeesVanImmerzeel/idf.svg?branch=master)](https://travis-ci.com/KeesVanImmerzeel/idf)
+[![R-CMD-check](https://github.com/KeesVanImmerzeel/idf/workflows/R-CMD-check/badge.svg)](https://github.com/KeesVanImmerzeel/idf/actions)
 <!-- badges: end -->
 
 Extending the 'terra' package in order to be able to read and write idf rasters.
