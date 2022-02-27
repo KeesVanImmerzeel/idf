@@ -27,7 +27,6 @@ test_that("Test that .write.idf and write_raster indeed writes idf- or tif files
                       "Error in .write.idf: file exists; use overwrite=TRUE"
                 )
           })
-
 if (file.exists(fn))
       file.remove(fn)
 if (file.exists(fnt))

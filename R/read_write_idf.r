@@ -1,12 +1,9 @@
-# To do 2022-2-21:
-# 1. add reading/writing double precision idf
-
 # ----------------------------------------------------------------------------
 #' Methods to create a terra::SpatRaster object with the ability to read idf files.
 #'
 #' The function 'read_raster' is able to create a RasterLayer object from an
 #' idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
-#' Otherwhise the function equals the function 'raster::raster()'.
+#' Otherwhise the function equals the function 'terra::rast()'.
 #'
 #' @param x filename (character)
 #' @param EPSG coordinate reference system like "EPSG:4326" (character)
@@ -21,7 +18,91 @@
 #' f
 #' r <- read_raster(f)
 #' @export
-read_raster <- function(x, EPSG="EPSG:28992", ...) {
+read_raster <- function(x, EPSG = "EPSG:28992", ...) {
+      # ----------------------------------------------------------------------------
+      # Read raster layer from idf file.
+      #
+      # @param x Name of idf-file (character)
+      # @return terra::SpatRaster object (single layer)
+      .read.idf <- function(x) {
+            con = file(x, "rb")
+            vars = readBin(
+                  con,
+                  integer(),
+                  #
+                  n = 3,
+                  size = 4,
+                  endian = "little"
+            )
+            size <- .get_size(lahey = vars[1])
+
+            ncol = vars[2]
+            nrow = vars[3]
+            vars = readBin(
+                  con,
+                  double(),
+                  n = 7,
+                  size = size,
+                  endian = "little"
+            )
+            xll = vars[1]
+            xur = vars[2]
+            yll = vars[3]
+            yur = vars[4]
+            minval = vars[5]
+            maxval = vars[6]
+            nodata = vars[7]
+            vars = readBin(
+                  con,
+                  logical(),
+                  n = 4,
+                  size = 1,
+                  endian = "little"
+            )
+            ieq = vars[1]
+            itb = vars[2]
+            if (ieq |
+                itb)
+                  stop("Non-equidistant IDF's or IDF's with tops and bottoms not supported yet...")
+            vars = readBin(
+                  con,
+                  double(),
+                  n = 2,
+                  size = size,
+                  endian = "little"
+            )
+            dx = vars[1]
+            dy = vars[2]
+            data = readBin(
+                  con,
+                  double(),
+                  n = ncol * nrow,
+                  size = size,
+                  endian = "little"
+            )
+            data = matrix(data,
+                          nrow = nrow,
+                          ncol = ncol,
+                          byrow = TRUE)
+            close(con)
+
+            layer <-
+                  terra::rast(
+                        nrows = nrow,
+                        ncols = ncol,
+                        xmin = xll,
+                        xmax = xur,
+                        ymin = yll,
+                        ymax = yur,
+                        vals = data
+                  )
+            terra::NAflag(layer) <- nodata
+
+            names(layer) <- fileutils::bare_filename(x)
+
+            return(layer)
+      }
+
       if ((typeof(x) == "character") &
           (.is_idf_extension(fileutils::get_filename_extension(x)))) {
             reslt <- .read.idf(x)
@@ -66,13 +147,14 @@ read_raster <- function(x, EPSG="EPSG:28992", ...) {
 #' Write raster data to a file.
 #'
 #' Writes a terra::SpatRaster object to a file, using one of
-#' the supported formats in the 'terra' package
+#' the supported formats in the 'terra' package.
 #' or an idf file format (ref. \url{https://oss.deltares.nl/web/imod}).
 #' In that case, use the'.idf' extension in the filename.
 #' @param x terra::SpatRaster object
 #' @param filename Output filename (character)
 #' @param e Terra extent object
 #' @param constant multiplication factor (numeric)
+#' @param double_precision Write double precision idf. Only meaningfull for writing idf-files (logical)
 #' @param ... Additional arguments as in 'terra::writeRaster'.
 #' @return This function is used for the side-effect of writing values to a file.
 #' @importFrom magrittr %<>%
@@ -81,57 +163,69 @@ write_raster <- function(x,
                          filename,
                          e = NULL,
                          constant = NULL,
+                         double_precision = FALSE,
                          ...) {
-      .write.idf <- function(x, filename, overwrite = FALSE) {
-            if ((overwrite == TRUE) |
-                (overwrite == FALSE & (!file.exists(filename)))) {
-                  con = file(filename, "wb")
-                  ncols <- terra::ncol(x)
-                  nrows <- terra::nrow(x)
-                  xll <- terra::xmin(x)
-                  xur <- terra::xmax(x)
-                  xlr <- terra::ymin(x)
-                  yur <- terra::ymax(x)
-                  mindata <- terra::minmax(x)[1]
-                  maxdata <- terra::minmax(x)[2]
-                  NAflg <- terra::NAflag(x)
-                  writeBin(as.integer(c(1271, ncols, nrows)),
-                           con,
-                           size = 4,
-                           endian = "little")
-                  writeBin(
-                        c(xll,
-                          xur,
-                          xlr,
-                          yur,
-                          mindata,
-                          maxdata,
-                          NAflg),
-                        con,
-                        size = 4,
-                        endian = "little"
-                  )
-                  writeBin(as.integer(0),
-                           con,
-                           size = 4,
-                           endian = "little")
-                  dx <- (xur - xll) / ncols
-                  dy <- (yur - xlr) / nrows
-                  writeBin(c(dx, dy),
-                           con,
-                           size = 4,
-                           endian = "little")
-                  writeBin(
-                        as.vector(terra::values(x)),
-                        con,
-                        size = 4,
-                        endian = "little"
-                  )
-                  close(con)
-            } else {
-                  stop("Error in .write.idf: file exists; use overwrite=TRUE")
+      .write.idf <-
+            function(x,
+                     filename,
+                     double_precision = FALSE,
+                     overwrite = FALSE) {
+                  if ((overwrite == TRUE) |
+                      (overwrite == FALSE & (!file.exists(filename)))) {
+                        con = file(filename, "wb")
+                        ncols <- terra::ncol(x)
+                        nrows <- terra::nrow(x)
+                        xll <- terra::xmin(x)
+                        xur <- terra::xmax(x)
+                        xlr <- terra::ymin(x)
+                        yur <- terra::ymax(x)
+                        mindata <- terra::minmax(x)[1]
+                        maxdata <- terra::minmax(x)[2]
+                        NAflg <- terra::NAflag(x)
+                        if (double_precision) {
+                              size <- 8
+                              lahey <- 2296
+                        } else {
+                              size <- 4
+                              lahey <- 1271
+                        }
+                        writeBin(as.integer(c(lahey, ncols, nrows)),
+                                 con,
+                                 size = 4,
+                                 endian = "little")
+                        writeBin(
+                              c(xll,
+                                xur,
+                                xlr,
+                                yur,
+                                mindata,
+                                maxdata,
+                                NAflg),
+                              con,
+                              size = size,
+                              endian = "little"
+                        )
+                        writeBin(as.integer(0),
+                                 con,
+                                 size = 4,
+                                 endian = "little")
+                        dx <- (xur - xll) / ncols
+                        dy <- (yur - xlr) / nrows
+                        writeBin(c(dx, dy),
+                                 con,
+                                 size = size,
+                                 endian = "little")
+                        writeBin(
+                              as.vector(terra::values(x)),
+                              con,
+                              size = size,
+                              endian = "little"
+                        )
+                        close(con)
+                  } else {
+                        stop("Error in .write.idf: file exists; use overwrite=TRUE")
+                  }
             }
-      }
 
       if (!is.null(e)) {
             x %<>% terra::crop(e)
@@ -140,87 +234,10 @@ write_raster <- function(x,
             terra::values(x) <- terra::values(x) * constant
       }
       if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
-            .write.idf(x, filename, ...)
+            .write.idf(x, filename, double_precision, ...)
       } else {
             suppressWarnings(terra::writeRaster(x, filename, ...))
       }
-}
-
-
-
-
-
-# ----------------------------------------------------------------------------
-# Read raster layer from idf file.
-#
-# @param x Name of idf-file (character)
-# @return terra::SpatRaster object (single layer)
-.read.idf <- function(x) {
-   con = file(x, "rb")
-   vars = readBin(con,
-                  integer(), #
-                  n = 3,
-                  size = 4,
-                  endian = "little")
-   size <- .get_size( lahey = vars[1] )
-
-   ncol = vars[2]
-   nrow = vars[3]
-   vars = readBin(con,
-                  double(),
-                  n = 7,
-                  size = size,
-                  endian = "little")
-   xll = vars[1]
-   xur = vars[2]
-   yll = vars[3]
-   yur = vars[4]
-   minval = vars[5]
-   maxval = vars[6]
-   nodata = vars[7]
-   vars = readBin(con,
-                  logical(),
-                  n = 4,
-                  size = 1,
-                  endian = "little")
-   ieq = vars[1]
-   itb = vars[2]
-   if (ieq |
-       itb)
-      stop("Non-equidistant IDF's or IDF's with tops and bottoms not supported yet...")
-   vars = readBin(con,
-                  double(),
-                  n = 2,
-                  size = size,
-                  endian = "little")
-   dx = vars[1]
-   dy = vars[2]
-   data = readBin(con,
-                  double(),
-                  n = ncol * nrow,
-                  size = size,
-                  endian = "little")
-   data = matrix(data,
-                 nrow = nrow,
-                 ncol = ncol,
-                 byrow = TRUE)
-   close(con)
-
-   layer <-
-      terra::rast(
-         nrows = nrow,
-         ncols = ncol,
-         xmin = xll,
-         xmax = xur,
-         ymin = yll,
-         ymax = yur,
-         vals=data
-      )
-   terra::NAflag(layer)<-nodata
-
-   names(layer) <- fileutils::bare_filename(x)
-
-   return(layer)
 }
 
 # ----------------------------------------------------------------------------
