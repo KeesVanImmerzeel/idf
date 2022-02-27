@@ -35,6 +35,7 @@ read_raster <- function(x, EPSG="EPSG:28992", ...) {
 # ----------------------------------------------------------------------------
 #
 #  Get size of floats (single or double precision IDF)
+#
 # @param Lahey Record Length Identification; 1271 is a single precision IDF,
 #              2296 a double precision (integer)
 # @return size of floats (integer)
@@ -49,7 +50,6 @@ read_raster <- function(x, EPSG="EPSG:28992", ...) {
 # ----------------------------------------------------------------------------
 
 # Test if the Specified Filename Extension is idf-Filename Extension
-#
 # Returns TRUE or FALSE depending on the input filename extension.
 #
 # @param ext Filename extension (character)
