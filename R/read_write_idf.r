@@ -28,7 +28,6 @@ read_raster <- function(x, EPSG = "EPSG:28992", ...) {
               size = size,
               endian = "little")
    }
-
    # ----------------------------------------------------------------------------
    # Read raster layer from idf file.
    #
@@ -167,88 +166,83 @@ write_raster <- function(x,
                          constant = NULL,
                          double_precision = FALSE,
                          ...) {
-      .write.idf <-
-            function(x,
-                     filename,
-                     double_precision = FALSE,
-                     overwrite = FALSE) {
-                  if ((overwrite == TRUE) |
-                      (overwrite == FALSE &
-                       (!file.exists(filename)))) {
-                        con = file(filename, "wb")
-                        ncols <- terra::ncol(x)
-                        nrows <- terra::nrow(x)
-                        xll <- terra::xmin(x)
-                        xur <- terra::xmax(x)
-                        xlr <- terra::ymin(x)
-                        yur <- terra::ymax(x)
-                        mindata <- terra::minmax(x)[1]
-                        maxdata <- terra::minmax(x)[2]
-                        NAflg <- terra::NAflag(x)
-                        if (double_precision) {
-                              size <- 8
-                              lahey <- 2295
-                        } else {
-                              size <- 4
-                              lahey <- 1271
-                        }
-                        writeBin(as.integer(c(lahey, ncols, nrows)),
-                                 con,
-                                 size = 4,
-                                 endian = "little")
-                        writeBin(
-                              c(xll,
-                                xur,
-                                xlr,
-                                yur,
-                                mindata,
-                                maxdata,
-                                NAflg),
-                              con,
-                              size = size,
-                              endian = "little"
-                        )
-                        writeBin(as.integer(0),
-                                 con,
-                                 size = 4,
-                                 endian = "little")
-                        if (double_precision) {
-                              writeBin(as.integer(0),
-                                       con,
-                                       size = 4,
-                                       endian = "little")
-                        }
-                        dx <- (xur - xll) / ncols
-                        dy <- (yur - xlr) / nrows
-                        writeBin(c(dx, dy),
-                                 con,
-                                 size = size,
-                                 endian = "little")
-                        writeBin(
-                              as.vector(terra::values(x)),
-                              con,
-                              size = size,
-                              endian = "little"
-                        )
-                        close(con)
-                  } else {
-                        stop("Error in .write.idf: file exists; use overwrite=TRUE")
-                  }
-            }
+   # Write binary with som defaults
+   .write_bin <- function(object = 0L,
+                          con,
+                          size = 4L) {
+      writeBin(
+         object = object,
+         con = con,
+         size = size,
+         endian = "little"
+      )
+   }
 
-      if (!is.null(e)) {
-            x %<>% terra::crop(e)
+   .write.idf <-
+      function(x,
+               filename,
+               double_precision = FALSE,
+               overwrite = FALSE) {
+         if ((overwrite == TRUE) |
+             (overwrite == FALSE &
+              (!file.exists(filename)))) {
+            con = file(filename, "wb")
+            if (double_precision) {
+               size <- 8
+               lahey <- 2295
+            } else {
+               size <- 4
+               lahey <- 1271
+            }
+            .write_bin(as.integer(lahey), con = con)
+            if (double_precision) {
+               .write_bin(con = con)
+            }
+            x %>% terra::ncol() %>% as.integer() %>% .write_bin(con = con)
+            if (double_precision) {
+               .write_bin(con = con)
+            }
+            x %>% terra::nrow() %>% as.integer() %>% .write_bin(con = con)
+            if (double_precision) {
+               .write_bin(con = con)
+            }
+            writeBin(
+               c(
+                  terra::xmin(x),
+                  terra::xmax(x),
+                  terra::ymin(x),
+                  terra::ymax(x),
+                  terra::minmax(x)[1],
+                  terra::minmax(x)[2],
+                  terra::NAflag(x)
+               ),
+               con,
+               size = size,
+               endian = "little"
+            )
+            .write_bin(con = con)
+            if (double_precision) {
+               .write_bin(con = con)
+            }
+            x %>% terra::res() %>% .write_bin(con = con, size = size)
+            x %>% terra::values() %>% as.vector() %>% .write_bin(con = con, size = size)
+            close(con)
+         } else {
+            stop("Error in .write.idf: file exists; use overwrite=TRUE")
+         }
       }
-      if (!is.null(constant)) {
-            terra::values(x) <- terra::values(x) * constant
-      }
-      if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
-            .write.idf(x, filename, double_precision, ...)
-      } else {
-            suppressWarnings(terra::writeRaster(x, filename, ...))
-      }
+
+   if (!is.null(e)) {
+      x %<>% terra::crop(e)
+   }
+   if (!is.null(constant)) {
+      terra::values(x) <- terra::values(x) * constant
+   }
+   if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
+      .write.idf(x, filename, double_precision, ...)
+   } else {
+      suppressWarnings(terra::writeRaster(x, filename, ...))
+   }
 }
 
 # ----------------------------------------------------------------------------
-
-
