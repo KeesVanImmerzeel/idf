@@ -17,16 +17,14 @@ read_raster(x, EPSG = "EPSG:28992", ...)
 terra::SpatRaster
 }
 \description{
-The function 'read_raster' is able to create a RasterLayer object from an
+The function 'read_raster' is able to create a terra::SpatRaster object from an
 idf-file if an idf-filename is specified (exctension '.idf', like in 'foo.idf').
 Otherwhise the function equals the function 'terra::rast()'.
 }
 \examples{
 f <- system.file("extdata", "test.idf", package="idf")
-f
 r <- read_raster(f)
 
 f <- system.file("extdata", "test.tif", package="idf")
-f
 r <- read_raster(f)
 }
