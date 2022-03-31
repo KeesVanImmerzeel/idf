@@ -4,12 +4,14 @@
 \alias{read_raster}
 \title{Methods to create a terra::SpatRaster object with the ability to read idf files.}
 \usage{
-read_raster(x, EPSG = "EPSG:28992", ...)
+read_raster(x, EPSG = "EPSG:28992", e = NULL, ...)
 }
 \arguments{
 \item{x}{filename (character)}
 
 \item{EPSG}{coordinate reference system like "EPSG:4326" (character)}
+
+\item{e}{Terra extent object}
 
 \item{...}{Additional arguments as for 'terra::rast' function. For an idf-raster, only the optional 'EPSG' argument is used.}
 }

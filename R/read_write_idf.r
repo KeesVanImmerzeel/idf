@@ -7,6 +7,7 @@
 #'
 #' @param x filename (character)
 #' @param EPSG coordinate reference system like "EPSG:4326" (character)
+#' @param e Terra extent object
 #' @param ... Additional arguments as for 'terra::rast' function. For an idf-raster, only the optional 'EPSG' argument is used.
 #' @return terra::SpatRaster
 #' @examples
@@ -16,7 +17,7 @@
 #' f <- system.file("extdata", "test.tif", package="idf")
 #' r <- read_raster(f)
 #' @export
-read_raster <- function(x, EPSG = "EPSG:28992", ...) {
+read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, ...) {
    # Read binary with som defaults
    .read_bin <- function(con,
                          what = integer(),
@@ -110,6 +111,9 @@ read_raster <- function(x, EPSG = "EPSG:28992", ...) {
    } else {
       reslt <- suppressWarnings(terra::rast(x, ...))
    }
+   if (!is.null(e)) {
+      reslt %<>% terra::crop(e)
+   }
    terra::crs(reslt) <- EPSG
    return(reslt)
 }
@@ -151,9 +155,9 @@ read_raster <- function(x, EPSG = "EPSG:28992", ...) {
 #' the supported formats in the 'terra' package.
 #' or an idf file format (ref. \url{https://oss.deltares.nl/web/imod}).
 #' In that case, use the'.idf' extension in the filename.
+#' @inheritParams read_raster
 #' @param x terra::SpatRaster object
 #' @param filename Output filename (character)
-#' @param e Terra extent object
 #' @param constant multiplication factor (numeric)
 #' @param double_precision Write double precision idf. Only meaningfull for writing idf-files (logical)
 #' @param ... Additional arguments as in 'terra::writeRaster'.
