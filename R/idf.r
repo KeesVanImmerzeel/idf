@@ -6,11 +6,15 @@
 #' the ncol and nrow fields of the header.
 #'
 #' @section idf functions:
-#' This package extends the 'terra' package with two functions:
+#' This package extends the 'terra' package with the following functions:
 #'
 #' \code{\link{read_raster}}
 #'
 #' \code{\link{write_raster}}
+#'
+#' \code{\link{create_funstr}}
+#'
+#' \code{\link{funstr_ptrn}}
 #'
 #' @docType package
 #' @name idf

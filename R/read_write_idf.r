@@ -155,19 +155,38 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
 
 # ----------------------------------------------------------------------------
 
+#' Create a string to be used as pattern in the function "create_funstr()".
+#'
+#' @return  string to be used as pattern in the function "create_funstr()" (character)
+#' @export
+funstr_ptrn <- function() {
+   paste0("\\[[",LETTERS,"\\]]")
+}
+
+# ----------------------------------------------------------------------------
+
 #' Create a string ("funstr") to be used in functions read_raster() and write_raster().
 #'
 #' @param s Blueprint of the string to be created, with the variable between square brackets.
+#' @param pattern character string containing a regular expression.
 #' @param replacement Symbol to replace the variable with in "s"
 #' @return String ("funstr") to be used in functions read_raster() and write_raster()
 #' @examples
-#' create_funstr("[A]*100")
+#' replacement <- c("y","x")
+#' create_funstr("[A]*100+[B]", replacement=c("y","x"))
 #' @export
-create_funstr <- function(s, replacement="x") {
+create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
    . = NULL
-   s %>% gsub(pattern="\\[[A-z]\\]", replacement=replacement,.) %>% gsub(" ", "", ., fixed=TRUE)
+   s %<>% gsub(pattern[1], replacement[1],.) %>% gsub(" ", "", ., fixed=TRUE)
+   n <- length(replacement)
+   if (n>1) {
+      s %>% gsub(pattern[2:n], replacement[2:n],.)
+   }  else {
+      s
+   }
 }
 
+#create_funstr <- function(s, pattern="\\[[A-z]\\]", replacement="x") {
 # ----------------------------------------------------------------------------
 
 #' Write raster data to a file.

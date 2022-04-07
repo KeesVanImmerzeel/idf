@@ -4,10 +4,12 @@
 \alias{create_funstr}
 \title{Create a string ("funstr") to be used in functions read_raster() and write_raster().}
 \usage{
-create_funstr(s, replacement = "x")
+create_funstr(s, pattern = funstr_ptrn(), replacement = "x")
 }
 \arguments{
 \item{s}{Blueprint of the string to be created, with the variable between square brackets.}
+
+\item{pattern}{character string containing a regular expression.}
 
 \item{replacement}{Symbol to replace the variable with in "s"}
 }
@@ -18,5 +20,6 @@ String ("funstr") to be used in functions read_raster() and write_raster()
 Create a string ("funstr") to be used in functions read_raster() and write_raster().
 }
 \examples{
-create_funstr("[A]*100")
+replacement <- c("y","x")
+create_funstr("[A]*100+[B]", replacement=c("y","x"))
 }
