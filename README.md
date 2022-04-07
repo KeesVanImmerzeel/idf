@@ -24,6 +24,7 @@ Then load the package with:
 - `read_raster()`: create a terra::SpatRaster object (single layer) from an idf-file.
 - `write_raster()`: writes an terra::SpatRaster object (single layer) to a file, using one of the many supported formats or the terra package 
   or the idf file format as used in the imod modeling software.
+- `create_funstr()`: Create a string ("funstr") to be used in functions read_raster() and write_raster().
 
 ## Get help
 

@@ -155,6 +155,21 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
 
 # ----------------------------------------------------------------------------
 
+#' Create a string ("funstr") to be used in functions read_raster() and write_raster().
+#'
+#' @param s Blueprint of the string to be created, with the variable between square brackets.
+#' @param replacement Symbol to replace the variable with in "s"
+#' @return String ("funstr") to be used in functions read_raster() and write_raster()
+#' @examples
+#' create_funstr("[A]*100")
+#' @export
+create_funstr <- function(s, replacement="x") {
+   . = NULL
+   s %>% gsub(pattern="\\[[A-z]\\]", replacement=replacement,.) %>% gsub(" ", "", ., fixed=TRUE)
+}
+
+# ----------------------------------------------------------------------------
+
 #' Write raster data to a file.
 #'
 #' Writes a terra::SpatRaster object to a file, using one of
