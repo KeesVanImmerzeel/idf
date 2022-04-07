@@ -8,7 +8,7 @@
 #' @param x filename (character)
 #' @param EPSG coordinate reference system like "EPSG:4326" (character)
 #' @param e Terra extent object
-#' @param funstr Optional function to modify raster values. Denote the raster with 'x' (character)
+#' @param funstr Optional function to modify raster values. Denote the raster with 'x' (or character between square brackets) (character)
 #' @param ... Additional arguments as for 'terra::rast' function. For an idf-raster, only the optional 'EPSG' argument is used.
 #' @return terra::SpatRaster
 #' @examples
@@ -118,7 +118,7 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
       x %<>% terra::crop(e)
    }
    if (!is.null(funstr)) {
-      x <- funstr %>% str2lang() %>% eval()
+      x <- funstr %>% create_funstr() %>% str2lang() %>% eval()
    }
    terra::crs(x) <- EPSG
    return(x)
@@ -260,7 +260,7 @@ write_raster <- function(x,
       x %<>% terra::crop(e)
    }
    if (!is.null(funstr)) {
-      x <- funstr %>% str2lang() %>% eval()
+      x <- funstr %>% create_funstr() %>% str2lang() %>% eval()
    }
    if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
       .write.idf(x, filename, double_precision, ...)

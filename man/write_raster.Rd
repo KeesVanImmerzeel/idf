@@ -20,7 +20,7 @@ write_raster(
 
 \item{e}{Terra extent object}
 
-\item{funstr}{Optional function to modify raster values. Denote the raster with 'x' (character)}
+\item{funstr}{Optional function to modify raster values. Denote the raster with 'x' (or character between square brackets) (character)}
 
 \item{double_precision}{Write double precision idf. Only meaningfull for writing idf-files (logical)}
 

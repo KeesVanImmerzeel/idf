@@ -13,7 +13,7 @@ read_raster(x, EPSG = "EPSG:28992", e = NULL, funstr = NULL, ...)
 
 \item{e}{Terra extent object}
 
-\item{funstr}{Optional function to modify raster values. Denote the raster with 'x' (character)}
+\item{funstr}{Optional function to modify raster values. Denote the raster with 'x' (or character between square brackets) (character)}
 
 \item{...}{Additional arguments as for 'terra::rast' function. For an idf-raster, only the optional 'EPSG' argument is used.}
 }
