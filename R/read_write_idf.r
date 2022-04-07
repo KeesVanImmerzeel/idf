@@ -8,6 +8,7 @@
 #' @param x filename (character)
 #' @param EPSG coordinate reference system like "EPSG:4326" (character)
 #' @param e Terra extent object
+#' @param funstr Optional function to modify raster values. Denote the raster with 'x' (character)
 #' @param ... Additional arguments as for 'terra::rast' function. For an idf-raster, only the optional 'EPSG' argument is used.
 #' @return terra::SpatRaster
 #' @examples
@@ -16,8 +17,10 @@
 #'
 #' f <- system.file("extdata", "test.tif", package="idf")
 #' r <- read_raster(f)
+#'
+#' r <- read_raster(f, funstr="x*100")
 #' @export
-read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, ...) {
+read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
    # Read binary with som defaults
    .read_bin <- function(con,
                          what = integer(),
@@ -107,15 +110,18 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, ...) {
 
    if ((typeof(x) == "character") &
        (.is_idf_extension(fileutils::get_filename_extension(x)))) {
-      reslt <- .read.idf(x)
+     x <- .read.idf(x)
    } else {
-      reslt <- suppressWarnings(terra::rast(x, ...))
+     x <- suppressWarnings(terra::rast(x, ...))
    }
    if (!is.null(e)) {
-      reslt %<>% terra::crop(e)
+      x %<>% terra::crop(e)
    }
-   terra::crs(reslt) <- EPSG
-   return(reslt)
+   if (!is.null(funstr)) {
+      x <- funstr %>% str2lang() %>% eval()
+   }
+   terra::crs(x) <- EPSG
+   return(x)
 }
 
 # ----------------------------------------------------------------------------
@@ -158,7 +164,6 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, ...) {
 #' @inheritParams read_raster
 #' @param x terra::SpatRaster object
 #' @param filename Output filename (character)
-#' @param constant multiplication factor (numeric)
 #' @param double_precision Write double precision idf. Only meaningfull for writing idf-files (logical)
 #' @param ... Additional arguments as in 'terra::writeRaster'.
 #' @return This function is used for the side-effect of writing values to a file.
@@ -167,7 +172,7 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, ...) {
 write_raster <- function(x,
                          filename,
                          e = NULL,
-                         constant = NULL,
+                         funstr=NULL,
                          double_precision = FALSE,
                          ...) {
    # Write binary with som defaults
@@ -239,8 +244,8 @@ write_raster <- function(x,
    if (!is.null(e)) {
       x %<>% terra::crop(e)
    }
-   if (!is.null(constant)) {
-      terra::values(x) <- terra::values(x) * constant
+   if (!is.null(funstr)) {
+      x <- funstr %>% str2lang() %>% eval()
    }
    if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
       .write.idf(x, filename, double_precision, ...)

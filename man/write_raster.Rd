@@ -8,7 +8,7 @@ write_raster(
   x,
   filename,
   e = NULL,
-  constant = NULL,
+  funstr = NULL,
   double_precision = FALSE,
   ...
 )
@@ -20,7 +20,7 @@ write_raster(
 
 \item{e}{Terra extent object}
 
-\item{constant}{multiplication factor (numeric)}
+\item{funstr}{Optional function to modify raster values. Denote the raster with 'x' (character)}
 
 \item{double_precision}{Write double precision idf. Only meaningfull for writing idf-files (logical)}
 
