@@ -14,15 +14,15 @@ write_raster(
 )
 }
 \arguments{
-\item{x}{terra::SpatRaster object}
+\item{x}{terra::SpatRaster object.}
 
-\item{filename}{Output filename (character)}
+\item{filename}{Output filename(s). In case "x" contains multiple layers and idf-output files are needed, specify a character vector of filenames (character).}
 
 \item{e}{Terra extent object}
 
 \item{funstr}{Optional function to modify raster values. Denote the raster with 'x' (or character between square brackets) (character)}
 
-\item{double_precision}{Write double precision idf. Only meaningfull for writing idf-files (logical)}
+\item{double_precision}{Write double precision idf. Only meaningfull for writing idf-files (logical).}
 
 \item{...}{Additional arguments as in 'terra::writeRaster'.}
 }

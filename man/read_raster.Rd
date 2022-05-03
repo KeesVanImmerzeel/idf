@@ -32,5 +32,14 @@ r <- read_raster(f)
 f <- system.file("extdata", "test.tif", package="idf")
 r <- read_raster(f)
 
+f <- system.file("extdata", "heads.tif", package="idf")
+r <- read_raster(f)
+names(r)
+
+f1 <- system.file("extdata", "HEAD_20080401_l1.idf", package="idf")
+f2 <- system.file("extdata", "HEAD_20080501_l1.idf", package="idf")
+f <- c(f1, f2)
+r <- read_raster(f)
+
 r <- read_raster(f, funstr="x*100")
 }

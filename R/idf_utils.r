@@ -53,7 +53,7 @@ create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
 #' @param idfname idf-filename (character).
 ##' @return Date
 #' @examples
-#' idfname_to_date("HEAD_20080401_l1.idf")
+#' idfname_to_date(c("HEAD_20080401_l1.idf","HEAD_20080501_l1.idf"))
 #' @export
 idfname_to_date <- function(idfname) {
       idfname %>% fileutils::bare_filename() %>% strsplit("_") %>% sapply(function(x) {

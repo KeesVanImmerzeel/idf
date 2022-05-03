@@ -16,5 +16,5 @@ Date
 Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
 }
 \examples{
-idfname_to_date("HEAD_20080401_l1.idf")
+idfname_to_date(c("HEAD_20080401_l1.idf","HEAD_20080501_l1.idf"))
 }

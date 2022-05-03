@@ -18,6 +18,15 @@
 #' f <- system.file("extdata", "test.tif", package="idf")
 #' r <- read_raster(f)
 #'
+#' f <- system.file("extdata", "heads.tif", package="idf")
+#' r <- read_raster(f)
+#' names(r)
+#'
+#' f1 <- system.file("extdata", "HEAD_20080401_l1.idf", package="idf")
+#' f2 <- system.file("extdata", "HEAD_20080501_l1.idf", package="idf")
+#' f <- c(f1, f2)
+#' r <- read_raster(f)
+#'
 #' r <- read_raster(f, funstr="x*100")
 #' @export
 read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
@@ -110,7 +119,7 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
 
    if ((typeof(x) == "character") &
        (.is_idf_extension(fileutils::get_filename_extension(x)))) {
-     x <- .read.idf(x)
+      x <- x %>% mapply(FUN=.read.idf) %>% terra::rast()
    } else {
      x <- suppressWarnings(terra::rast(x, ...))
    }
@@ -148,9 +157,9 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
 #' or an idf file format (ref. \url{https://oss.deltares.nl/web/imod}).
 #' In that case, use the'.idf' extension in the filename.
 #' @inheritParams read_raster
-#' @param x terra::SpatRaster object
-#' @param filename Output filename (character)
-#' @param double_precision Write double precision idf. Only meaningfull for writing idf-files (logical)
+#' @param x terra::SpatRaster object.
+#' @param filename Output filename(s). In case "x" contains multiple layers and idf-output files are needed, specify a character vector of filenames (character).
+#' @param double_precision Write double precision idf. Only meaningfull for writing idf-files (logical).
 #' @param ... Additional arguments as in 'terra::writeRaster'.
 #' @return This function is used for the side-effect of writing values to a file.
 #' @importFrom magrittr %<>%
@@ -234,7 +243,7 @@ write_raster <- function(x,
       x <- funstr %>% create_funstr() %>% str2lang() %>% eval()
    }
    if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
-      .write.idf(x, filename, double_precision, ...)
+      x %<>% mapply(FUN=.write.idf, filename, MoreArgs=list(double_precision=double_precision, ...), USE.NAMES = FALSE)
    } else {
       suppressWarnings(terra::writeRaster(x, filename, ...))
    }
