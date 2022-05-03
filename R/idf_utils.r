@@ -8,8 +8,10 @@
 # @examples
 # .is_idf_extension(".idf")
 # .is_idf_extension(".txt")
+# .is_idf_extension(c(".txt",".idf"))
+# .is_idf_extension(c(".idf",".idf"))
 .is_idf_extension <- function( ext ) {
-      toupper(ext) == ".IDF"
+      ( toupper(ext) == ".IDF") %>% all()
 }
 
 # ----------------------------------------------------------------------------
