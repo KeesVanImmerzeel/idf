@@ -26,6 +26,9 @@ Then load the package with:
   or the idf file format as used in the imod modeling software.
 - `create_funstr()`: Create a string ("funstr") to be used in functions read_raster() and write_raster().
 - `funstr_ptrn()`: Create a string to be used as pattern in the function "create_funstr()".
+- `idfname_to_date()`: Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
+- `filter_idfnames()`: Filter filenames of idf files with a date included, like "HEAD_20080402_l1.idf"."
+
 
 ## Get help
 

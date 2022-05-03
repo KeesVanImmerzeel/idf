@@ -21,5 +21,9 @@ This package extends the 'terra' package with the following functions:
 \code{\link{create_funstr}}
 
 \code{\link{funstr_ptrn}}
+
+\code{\link{idfname_to_date}}
+
+\code{\link{filter_idfnames}}
 }
 

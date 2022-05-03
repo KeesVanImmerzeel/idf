@@ -16,6 +16,10 @@
 #'
 #' \code{\link{funstr_ptrn}}
 #'
+#' \code{\link{idfname_to_date}}
+#'
+#' \code{\link{filter_idfnames}}
+#'
 #' @docType package
 #' @name idf
 #'
@@ -35,5 +39,7 @@
 #' @importFrom terra crop
 #' @importFrom terra writeRaster
 #' @importFrom terra `values<-`
+#' @importFrom lubridate "ymd"
+#' @importFrom lubridate "month"
 #'
 NULL
