@@ -120,9 +120,16 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
    if ((typeof(x) == "character") &
        (.is_idf_extension(fileutils::get_filename_extension(x)))) {
       x <- x %>% mapply(FUN=.read.idf) %>% terra::rast()
+
    } else {
      x <- suppressWarnings(terra::rast(x, ...))
    }
+   fnames <- names(x)
+   dates <- fnames %>% idf::idfname_to_date()
+   if (all(!is.na(dates))) {
+      terra::time(x) <- dates
+   }
+
    if (!is.null(e)) {
       x %<>% terra::crop(e)
    }

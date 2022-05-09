@@ -39,6 +39,7 @@
 #' @importFrom terra crop
 #' @importFrom terra writeRaster
 #' @importFrom terra `values<-`
+#' @importFrom terra `time<-`
 #' @importFrom lubridate "ymd"
 #' @importFrom lubridate "month"
 #'
