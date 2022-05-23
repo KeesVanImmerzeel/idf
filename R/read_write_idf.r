@@ -125,9 +125,11 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
      x <- suppressWarnings(terra::rast(x, ...))
    }
    fnames <- names(x)
-   dates <- fnames %>% idf::idfname_to_date()
-   if (all(!is.na(dates))) {
-      terra::time(x) <- dates
+   dates <-suppressWarnings(idf::idfname_to_date( fnames))
+   if (!is.null(dates)) {
+      if (typeof(dates)=="double") {
+         terra::time(x) <- dates
+      }
    }
 
    if (!is.null(e)) {
