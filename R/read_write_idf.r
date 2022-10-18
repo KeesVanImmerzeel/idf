@@ -129,6 +129,7 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
    if (!is.null(dates)) {
       if (typeof(dates)=="double") {
          terra::time(x) <- dates
+         names(x) <- dates %>% as.character()
       }
    }
 
