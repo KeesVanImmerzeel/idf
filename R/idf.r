@@ -20,6 +20,8 @@
 #'
 #' \code{\link{filter_idfnames}}
 #'
+#' \code{\link{create_statistic_raster}}
+#'
 #' @docType package
 #' @name idf
 #'
@@ -37,6 +39,7 @@
 #' @importFrom terra minmax
 #' @importFrom terra values
 #' @importFrom terra crop
+#' @importFrom terra app
 #' @importFrom terra writeRaster
 #' @importFrom terra `values<-`
 #' @importFrom terra `time<-`

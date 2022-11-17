@@ -25,5 +25,7 @@ This package extends the 'terra' package with the following functions:
 \code{\link{idfname_to_date}}
 
 \code{\link{filter_idfnames}}
+
+\code{\link{create_statistic_raster}}
 }
 

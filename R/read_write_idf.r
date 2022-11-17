@@ -57,6 +57,9 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
       # and requires padding with some additional bytes
       if (double_precision) {
          void <- .read_bin(con)
+         #print("double precision")
+      } else {
+         #print("single precision")
       }
       ncol <- .read_bin(con)
       if (double_precision) {
@@ -102,37 +105,36 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
                 byrow = TRUE)
       close(con)
 
+      e <- terra::ext(xll, xur, yll, yur)
+      d <- suppressWarnings(idf::idfname_to_date(x))
+      if (is.na(d)) {
+            d <- as.Date("1900-01-01")
+            nm <- fileutils::bare_filename(x)
+      } else {
+            nm <- d %>% as.character()
+      }
       layer <-
          terra::rast(
             nrows = nrow,
             ncols = ncol,
-            xmin = xll,
-            xmax = xur,
-            ymin = yll,
-            ymax = yur,
+            extent = e,
+            crs=EPSG,
+            resolution=dx,
+            time=d,
+            names=nm,
             vals = data
          )
       terra::NAflag(layer) <- nodata
-      names(layer) <- fileutils::bare_filename(x)
       return(layer)
    }
 
    if ((typeof(x) == "character") &
        (.is_idf_extension(fileutils::get_filename_extension(x)))) {
-      x <- x %>% mapply(FUN=.read.idf) %>% terra::rast()
-
+      x <- x %>% mapply(FUN=.read.idf, USE.NAMES=FALSE) %>% terra::rast()
+      terra::crs(x) <- EPSG
    } else {
      x <- suppressWarnings(terra::rast(x, ...))
    }
-   fnames <- names(x)
-   dates <-suppressWarnings(idf::idfname_to_date( fnames))
-   if (!is.null(dates)) {
-      if (typeof(dates)=="double") {
-         terra::time(x) <- dates
-         names(x) <- dates %>% as.character()
-      }
-   }
-
    if (!is.null(e)) {
       x %<>% terra::crop(e)
    }
@@ -249,13 +251,16 @@ write_raster <- function(x,
    if (!is.null(e)) {
       x %<>% terra::crop(e)
    }
+
    if (!is.null(funstr)) {
       x <- funstr %>% create_funstr() %>% str2lang() %>% eval()
    }
    if (.is_idf_extension(fileutils::get_filename_extension(filename))) {
-      x %<>% mapply(FUN=.write.idf, filename, MoreArgs=list(double_precision=double_precision, ...), USE.NAMES = FALSE)
+      x %>% mapply(FUN=.write.idf, filename, MoreArgs=list(double_precision=double_precision, ...), USE.NAMES = FALSE)
    } else {
+      tictoc::tic("--> terra::writeRaster <--")
       suppressWarnings(terra::writeRaster(x, filename, ...))
+      tictoc::toc()
    }
 }
 

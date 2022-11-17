@@ -68,17 +68,90 @@ idfname_to_date <- function(idfname) {
 #' @param fltr filter to be applied. In this filter a dot indicates the date field (character).
 #' @return Selected names of idf-files.
 #' @examples
-#' idfnames <- c("HEAD_20080401_l1.idf","HEAD_20080501_l1")
+#' idfname <- c("HEAD_20080401_l1.idf","HEAD_20080501_l1")
 #' fltr <- "month(.)==4"
-#' filter_idfnames(idfnames, fltr)
+#' filter_idfnames(idfname, fltr)
 #' @export
 filter_idfnames <- function(idfname, fltr = NULL) {
-      . = NULL
+      . <- NULL
+      year <- NULL
+      day <- NULL
       if (!is.null(fltr)) {
             dates <- idfname %>% idfname_to_date()
-            fltr %<>% gsub("\\.", "dates", .)
-            sel <- fltr %>%  str2lang() %>% eval()
+
+            #fltr %<>% gsub("\\.", "dates", .)
+
+            df <-
+                  data.frame(
+                        date = dates,
+                        year = lubridate::year(dates),
+                        month = lubridate::month(dates),
+                        day = lubridate::day(dates)
+                  )
+            colnames(df) <-
+                  c("date",
+                    "year",
+                    "month",
+                    "day")
+            df %<>% dplyr::mutate(hydro_year = ifelse(month %in% 10:12, year + 1, year))
+            df %<>% dplyr::mutate(season = ifelse(
+                  month %in% 9:11,
+                  "herfst",
+                  ifelse(
+                        month %in% c(12, 1, 2),
+                        "Winter",
+                        ifelse(month %in% 3:5, "voorjaar",
+                               "zomer")
+                  )
+            ))
+            df %<>% dplyr::mutate(hydr_season = ifelse(month %in% c(10:12, 1:3),
+                                                "hydr_wintr",
+                                                "hydr_summr"))
+
+            df %<>% dplyr::mutate(apr1okt1 = ifelse(
+                  month == 4 & day == 1,
+                  "apr_1",
+                  ifelse(month == 10 & day == 1,
+                         "okt_1", "other")
+            ))
+
+            sel <- str2lang(paste("df$date %>% ", fltr)) %>% eval()
             return(idfname[sel])
       } else
             return(idfname)
 }
+
+# ----------------------------------------------------------------------------
+
+#' Summarize the values of multiple layers into one layer.
+
+#' @inheritParams read_raster
+#' @param statistic Statistic to apply to selected rasters: mean, min, max, sd, median (character)
+#' @param keys a one row data.frame (or tibble) with no column, consistently with dplyr::group_keys() (tibble)
+#' @return terra::SpatRaster
+#' @examples
+#' statistic <- "max"
+#' keys <- data.frame(day=1)
+#' f1 <- system.file("extdata", "HEAD_20080401_l1.idf", package="idf")
+#' f2 <- system.file("extdata", "HEAD_20080501_l1.idf", package="idf")
+#' x <- c(f1, f2)
+#' create_statistic_raster(x, statistic=statistic, keys=keys)
+#' @export
+create_statistic_raster <-
+      function(x,
+               EPSG = "EPSG:28992",
+               e = NULL,
+               funstr = NULL,
+               statistic = "mean",
+               keys) {
+            r <- x %>% idf::read_raster(
+                  EPSG=EPSG,
+                  e=e,
+                  funstr=funstr
+            )
+            print("raster is read")
+            r <- paste0("terra::app(r, fun=", statistic,")") %>% str2lang() %>% eval()
+            names(r) <-
+                  paste0(statistic, "_", colnames(keys), "_", as.character(keys[1,]))
+            return(r)
+      }
