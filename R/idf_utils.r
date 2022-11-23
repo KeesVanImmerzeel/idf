@@ -50,15 +50,24 @@ create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
 # ----------------------------------------------------------------------------
 
 #' Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
+#' If no date can be deduced, NA is returned.
 #' @param idfname idf-filename (character).
 ##' @return Date
 #' @examples
 #' idfname_to_date(c("HEAD_20080401_l1.idf","HEAD_20080501_l1.idf"))
 #' @export
 idfname_to_date <- function(idfname) {
-      idfname %>% fileutils::bare_filename() %>% strsplit("_") %>% sapply(function(x) {
-            x[2]
-      }) %>% lubridate::ymd()
+#      idfname %>% fileutils::bare_filename() %>% strsplit("_") %>% sapply(function(x) {
+#            x[2]
+#      }) %>% lubridate::ymd()
+      x <-idfname %>% fileutils::bare_filename() %>% strsplit("_") %>% unlist()
+      x <-  suppressWarnings(lubridate::ymd(x))
+      x <- x[!is.na(x)]
+      if (length(idfname) == length(x)) {
+            return(x)
+      } else {
+            return(NA)
+      }
 }
 
 # ----------------------------------------------------------------------------
