@@ -19,6 +19,6 @@ Filter filenames of idf- files with a date included, like 'HEAD_20080402_l1.idf'
 }
 \examples{
 idfname <- c("HEAD_20080401_l1.idf","HEAD_20080501_l1")
-fltr <- "month(.)==4"
+fltr <- "filter(month==4)"
 filter_idfnames(idfname, fltr)
 }

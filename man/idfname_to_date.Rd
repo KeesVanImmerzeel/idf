@@ -2,7 +2,8 @@
 % Please edit documentation in R/idf_utils.r
 \name{idfname_to_date}
 \alias{idfname_to_date}
-\title{Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.}
+\title{Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
+If no date can be deduced, NA is returned.}
 \usage{
 idfname_to_date(idfname)
 }
@@ -14,6 +15,7 @@ Date
 }
 \description{
 Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
+If no date can be deduced, NA is returned.
 }
 \examples{
 idfname_to_date(c("HEAD_20080401_l1.idf","HEAD_20080501_l1.idf"))

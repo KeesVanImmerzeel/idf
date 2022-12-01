@@ -78,7 +78,7 @@ idfname_to_date <- function(idfname) {
 #' @return Selected names of idf-files.
 #' @examples
 #' idfname <- c("HEAD_20080401_l1.idf","HEAD_20080501_l1")
-#' fltr <- "month(.)==4"
+#' fltr <- "filter(month==4)"
 #' filter_idfnames(idfname, fltr)
 #' @export
 filter_idfnames <- function(idfname, fltr = NULL) {
@@ -92,13 +92,15 @@ filter_idfnames <- function(idfname, fltr = NULL) {
 
             df <-
                   data.frame(
+                        fname = idfname,
                         date = dates,
                         year = lubridate::year(dates),
                         month = lubridate::month(dates),
                         day = lubridate::day(dates)
                   )
             colnames(df) <-
-                  c("date",
+                  c("fname",
+                    "date",
                     "year",
                     "month",
                     "day")
@@ -123,9 +125,9 @@ filter_idfnames <- function(idfname, fltr = NULL) {
                   ifelse(month == 10 & day == 1,
                          "okt_1", "other")
             ))
-
-            sel <- str2lang(paste("df$date %>% ", fltr)) %>% eval()
-            return(idfname[sel])
+            fltr %<>% trimws()
+            sel <- str2lang(paste("df %>% dplyr::", fltr)) %>% eval()
+            return(sel$fname)
       } else
             return(idfname)
 }
