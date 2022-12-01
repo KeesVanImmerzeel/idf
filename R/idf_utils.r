@@ -82,49 +82,52 @@ idfname_to_date <- function(idfname) {
 #' filter_idfnames(idfname, fltr)
 #' @export
 filter_idfnames <- function(idfname, fltr = NULL) {
-      . <- NULL
-      year <- NULL
-      day <- NULL
+      #. <- NULL
+      #year <- NULL
+      #day <- NULL
       if (!is.null(fltr)) {
-            dates <- idfname %>% idfname_to_date()
+            #dates <- idfname %>% idfname_to_date()
 
             #fltr %<>% gsub("\\.", "dates", .)
 
-            df <-
-                  data.frame(
-                        fname = idfname,
-                        date = dates,
-                        year = lubridate::year(dates),
-                        month = lubridate::month(dates),
-                        day = lubridate::day(dates)
-                  )
-            colnames(df) <-
-                  c("fname",
-                    "date",
-                    "year",
-                    "month",
-                    "day")
-            df %<>% dplyr::mutate(hydro_year = ifelse(month %in% 10:12, year + 1, year))
-            df %<>% dplyr::mutate(season = ifelse(
-                  month %in% 9:11,
-                  "herfst",
-                  ifelse(
-                        month %in% c(12, 1, 2),
-                        "Winter",
-                        ifelse(month %in% 3:5, "voorjaar",
-                               "zomer")
-                  )
-            ))
-            df %<>% dplyr::mutate(hydr_season = ifelse(month %in% c(10:12, 1:3),
-                                                "hydr_wintr",
-                                                "hydr_summr"))
+            #df <-
+            #      data.frame(
+            #            fname = idfname,
+            #            date = dates,
+            #            year = lubridate::year(dates),
+            #            month = lubridate::month(dates),
+            #            day = lubridate::day(dates)
+            #      )
+            #colnames(df) <-
+            #      c("fname",
+            #        "date",
+            #        "year",
+            #        "month",
+            #        "day")
+            #df %<>% dplyr::mutate(hydro_year = ifelse(month %in% 10:12, year + 1, year))
+            #df %<>% dplyr::mutate(season = ifelse(
+            #      month %in% 9:11,
+            #      "herfst",
+            #      ifelse(
+            #            month %in% c(12, 1, 2),
+            #            "Winter",
+            #            ifelse(month %in% 3:5, "voorjaar",
+            #                   "zomer")
+            #      )
+            #))
+            #df %<>% dplyr::mutate(hydr_season = ifelse(month %in% c(10:12, 1:3),
+            #                                    "hydr_wintr",
+            #                                    "hydr_summr"))
 
-            df %<>% dplyr::mutate(apr1okt1 = ifelse(
-                  month == 4 & day == 1,
-                  "apr_1",
-                  ifelse(month == 10 & day == 1,
-                         "okt_1", "other")
-            ))
+            #df %<>% dplyr::mutate(apr1okt1 = ifelse(
+            #      month == 4 & day == 1,
+            #      "apr_1",
+            #      ifelse(month == 10 & day == 1,
+            #             "okt_1", "other")
+            #))
+
+            df <- idfname %>% idfname_to_date() %>% fileutils::create_dates_dataframe()
+            df$fname <- idfname
             fltr %<>% trimws()
             sel <- str2lang(paste("df %>% dplyr::", fltr)) %>% eval()
             return(sel$fname)
