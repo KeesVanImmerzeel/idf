@@ -4,4 +4,4 @@
 ^appveyor\.yml$
 ^\.travis\.yml$
 ^\.github$
-"^\\data-raw"
+^\.data-raw

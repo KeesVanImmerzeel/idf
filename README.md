@@ -28,6 +28,7 @@ Then load the package with:
 - `funstr_ptrn()`: Create a string to be used as pattern in the function "create_funstr()".
 - `idfname_to_date()`: Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
 - `filter_idfnames()`: Filter filenames of idf files with a date included, like "HEAD_20080402_l1.idf".
+- `all_idf_filenames_contain_dates()`: FALSE if at least 1 filename specified does not contain a date; TRUE otherwise (all filenames contain a date).
 - `create_statistic_raster()`: Summarize the values of multiple layers into one layer.
 
 ## Get help

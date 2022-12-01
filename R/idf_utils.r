@@ -52,7 +52,7 @@ create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
 #' Extract the date part of an idf filename with a date included, like in 'HEAD_20080402_l1.idf'.
 #' If no date can be deduced, NA is returned.
 #' @param idfname idf-filename (character).
-##' @return Date
+#' @return Date
 #' @examples
 #' idfname_to_date(c("HEAD_20080401_l1.idf","HEAD_20080501_l1.idf"))
 #' @export
@@ -138,7 +138,6 @@ filter_idfnames <- function(idfname, fltr = NULL) {
 # ----------------------------------------------------------------------------
 
 #' Summarize the values of multiple layers into one layer.
-
 #' @inheritParams read_raster
 #' @param statistic Statistic to apply to selected rasters: mean, min, max, sd, median (character)
 #' @param keys a one row data.frame (or tibble) with no column, consistently with dplyr::group_keys() (tibble)
@@ -169,3 +168,15 @@ create_statistic_raster <-
                   paste0(statistic, "_", colnames(keys), "_", as.character(keys[1,]))
             return(r)
       }
+# ----------------------------------------------------------------------------
+
+#' Check if all idf filenames (like in 'HEAD_20080402_l1.idf') contain dates.
+#' FALSE if at least 1 filename specified does not contain a date.
+#' @inheritParams idfname_to_date
+#' @return FALSE if at least 1 filename specified does not contain a date; TRUE otherwise (all filenames contain a date).
+#' @examples
+#' all_idf_filenames_contain_dates(c("HEAD_20080401_l1.idf","HEAD_20080501_l1.idf"))
+#' @export
+all_idf_filenames_contain_dates <- function(idfname) {
+      all(!is.na(idf::idfname_to_date(idfname)))
+}
