@@ -19,9 +19,8 @@
 #' Create a string to be used as pattern in the function "create_funstr()".
 #'
 #' @return  string to be used as pattern in the function "create_funstr()" (character)
-#' @export
 funstr_ptrn <- function() {
-      paste0("\\[[",LETTERS,"\\]]")
+      paste0("\\[[",LETTERS,"\\]]") %>% fileutils::rSIF_repair_exprstr_from_batch()
 }
 
 # ----------------------------------------------------------------------------
