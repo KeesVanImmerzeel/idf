@@ -137,6 +137,8 @@ filter_idfnames <- function(idfname, fltr = NULL) {
 # ----------------------------------------------------------------------------
 
 #' Summarize the values of multiple layers into one layer.
+#' The name of the resulting raster is based on the colnames of the keys data.frame (input) and
+#' the values in the first row of this data.frame.
 #' @inheritParams read_raster
 #' @param statistic Statistic to apply to selected rasters: mean, min, max, sd, median (character)
 #' @param keys a one row data.frame (or tibble) with no column, consistently with dplyr::group_keys() (tibble)
@@ -161,10 +163,12 @@ create_statistic_raster <-
                   e=e,
                   funstr=funstr
             )
-            print("raster is read")
+            #print("rasters are read")
             r <- paste0("terra::app(r, fun=", statistic,")") %>% str2lang() %>% eval()
+            s <- paste(colnames(keys),keys[1,] |> as.character()) |> paste(collapse="_")
+            #print(s)
             names(r) <-
-                  paste0(statistic, "_", colnames(keys), "_", as.character(keys[1,]))
+                  paste0(statistic, "_", gsub(" ", "_", s))
             return(r)
       }
 # ----------------------------------------------------------------------------

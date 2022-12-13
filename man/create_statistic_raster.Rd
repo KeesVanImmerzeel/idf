@@ -2,7 +2,9 @@
 % Please edit documentation in R/idf_utils.r
 \name{create_statistic_raster}
 \alias{create_statistic_raster}
-\title{Summarize the values of multiple layers into one layer.}
+\title{Summarize the values of multiple layers into one layer.
+The name of the resulting raster is based on the colnames of the keys data.frame (input) and
+the values in the first row of this data.frame.}
 \usage{
 create_statistic_raster(
   x,
@@ -31,6 +33,8 @@ terra::SpatRaster
 }
 \description{
 Summarize the values of multiple layers into one layer.
+The name of the resulting raster is based on the colnames of the keys data.frame (input) and
+the values in the first row of this data.frame.
 }
 \examples{
 statistic <- "max"
