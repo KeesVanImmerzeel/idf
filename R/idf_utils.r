@@ -165,7 +165,7 @@ create_statistic_raster <-
             )
             #print("rasters are read")
             r <- paste0("terra::app(r, fun=", statistic,")") %>% str2lang() %>% eval()
-            s <- paste(colnames(keys),keys[1,] |> as.character()) |> paste(collapse="_")
+            s <- paste(colnames(keys),keys[1,] %>% as.character()) %>% paste(collapse="_")
             #print(s)
             names(r) <-
                   paste0(statistic, "_", gsub(" ", "_", s))
