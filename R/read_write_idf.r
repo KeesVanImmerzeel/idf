@@ -135,13 +135,16 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
    } else {
      x <- suppressWarnings(terra::rast(x, ...))
    }
+   if (terra::crs(x)=="") {
+      terra::crs(x) <- EPSG
+   }
+
    if (!is.null(e)) {
       x %<>% terra::crop(e)
    }
    if (!is.null(funstr)) {
       x <- funstr %>% create_funstr() %>% str2lang() %>% eval()
    }
-   terra::crs(x) <- EPSG
    return(x)
 }
 
