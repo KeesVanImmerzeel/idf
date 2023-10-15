@@ -20,7 +20,7 @@
 #'
 #' @return  string to be used as pattern in the function "create_funstr()" (character)
 funstr_ptrn <- function() {
-      paste0("\\[[",LETTERS,"\\]]") %>% fileutils::rSIF_repair_exprstr_from_batch()
+      paste0("\\[[",LETTERS,"\\]]")
 }
 
 # ----------------------------------------------------------------------------
@@ -44,6 +44,7 @@ create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
       }  else {
             s
       }
+      s %>% fileutils::rSIF_repair_exprstr_from_batch()
 }
 
 # ----------------------------------------------------------------------------
