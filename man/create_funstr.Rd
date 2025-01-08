@@ -20,6 +20,5 @@ String ("funstr") to be used in functions read_raster() and write_raster()
 Create a string ("funstr") to be used in functions read_raster() and write_raster().
 }
 \examples{
-replacement <- c("y","x")
 create_funstr("[A]*100+[B]", replacement=c("y","x"))
 }

@@ -32,7 +32,6 @@ funstr_ptrn <- function() {
 #' @param replacement Symbol to replace the variable with in "s"
 #' @return String ("funstr") to be used in functions read_raster() and write_raster()
 #' @examples
-#' replacement <- c("y","x")
 #' create_funstr("[A]*100+[B]", replacement=c("y","x"))
 #' @export
 create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
@@ -40,9 +39,7 @@ create_funstr <- function(s, pattern=funstr_ptrn(), replacement="x") {
       s %<>% gsub(pattern[1], replacement[1],.) %>% gsub(" ", "", ., fixed=TRUE)
       n <- length(replacement)
       if (n>1) {
-            s %>% gsub(pattern[2:n], replacement[2:n],.)
-      }  else {
-            s
+            s %<>% gsub(pattern[2:n], replacement[2:n],.)
       }
       s %>% fileutils::rSIF_repair_exprstr_from_batch()
 }

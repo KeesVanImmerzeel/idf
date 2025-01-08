@@ -22,7 +22,6 @@
 #'
 #' \code{\link{create_statistic_raster}}
 #'
-#' @docType package
 #' @name idf
 #'
 #' @importFrom fileutils get_filename_extension
@@ -45,5 +44,6 @@
 #' @importFrom terra `time<-`
 #' @importFrom lubridate "ymd"
 #' @importFrom lubridate "month"
+#' @importFrom dplyr "filter"
 #'
 NULL

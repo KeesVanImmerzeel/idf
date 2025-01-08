@@ -128,20 +128,26 @@ read_raster <- function(x, EPSG = "EPSG:28992", e=NULL, funstr=NULL, ...) {
       return(layer)
    }
 
-   if ((typeof(x) == "character") &
-       (.is_idf_extension(fileutils::get_filename_extension(x)))) {
-      x <- x %>% mapply(FUN=.read.idf, USE.NAMES=FALSE) %>% terra::rast()
-      terra::crs(x) <- EPSG
+   is_idf_type <- (typeof(x) == "character") &
+         (.is_idf_extension(fileutils::get_filename_extension(x)))
+
+   if (is_idf_type) {
+      x <- x %>% mapply(FUN=.read.idf, USE.NAMES=FALSE)
+
    } else {
-     x <- suppressWarnings(terra::rast(x, ...))
-   }
-   if (terra::crs(x)=="") {
-      terra::crs(x) <- EPSG
+      x <- x %>% mapply(FUN=terra::rast, USE.NAMES=FALSE)
    }
 
    if (!is.null(e)) {
-      x %<>% terra::crop(e)
+      x <- x |> lapply(FUN=terra::crop, y=e)
    }
+   x <- suppressWarnings(terra::rast(x, ...))
+
+   if ((terra::crs(x)=="")||(is_idf_type)) {
+      terra::crs(x) <- EPSG
+   }
+
+
    if (!is.null(funstr)) {
       x <- funstr %>% create_funstr() %>% str2lang() %>% eval()
    }
